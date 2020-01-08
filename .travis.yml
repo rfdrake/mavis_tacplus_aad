@@ -1,17 +1,13 @@
 language: perl
 perl:
-    - "blead"
-    - "dev"
     - "5.22.1"
-    - "5.10"
+    - "5.10.1"
+    - "5.18.3"
 
 matrix:
   include:
     - perl: 5.22.1
       env: COVERAGE=1   # enables coverage+coveralls reporting
-  allow_failures:
-    - perl: blead       # ignore failures for blead perl
-    - perl: dev         # ignore failures for dev perl
 sudo: false             # faster builds as long as you don't need sudo access
 
 before_install:
