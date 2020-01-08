@@ -1,3 +1,4 @@
+os: linux
 language: perl
 perl:
     - "5.22.1"
@@ -5,10 +6,10 @@ perl:
     - "5.18.3"
 
 matrix:
+  fast_finish: true
   include:
     - perl: 5.22.1
       env: COVERAGE=1   # enables coverage+coveralls reporting
-sudo: false             # faster builds as long as you don't need sudo access
 
 before_install:
      - eval $(curl https://travis-perl.github.io/init) --auto
