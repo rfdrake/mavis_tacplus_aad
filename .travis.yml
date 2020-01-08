@@ -2,12 +2,12 @@ language: perl
 perl:
     - "blead"
     - "dev"
-    - "5.20"
+    - "5.22.1"
     - "5.10"
 
 matrix:
   include:
-    - perl: 5.20
+    - perl: 5.22.1
       env: COVERAGE=1   # enables coverage+coveralls reporting
   allow_failures:
     - perl: blead       # ignore failures for blead perl
