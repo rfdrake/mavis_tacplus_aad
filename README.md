@@ -100,6 +100,14 @@ Your final settings will look like this:
 	setenv OAUTH_CLIENT_ID = "<YOUR CLIENT ID>"
 	setenv OAUTH_CLIENT_SECRET = "<YOUR SECRET KEY>"
 	setenv OAUTH_DOMAIN = "<YOUR DOMAIN NAME>"
+
+    # for static groups
+    setenv OAUTH_GROUP_ID = "<GROUP ID OF ALLOWED USERS>"
+
+    # for named groups
+    setenv FLAG_USE_MEMBEROF = 1
+    setenv REQUIRE_TACACS_GROUP_PREFIX = 1
+    setenv AD_GROUP_PREFIX = "tacacs"
 	exec = /usr/local/lib/mavis/mavis_tacplus_aad.pl
 
 
