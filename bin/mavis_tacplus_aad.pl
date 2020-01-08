@@ -150,7 +150,7 @@ use HTTP::Tiny;
 use Syntax::Keyword::Try;
 use JSON;
 use Crypt::JWT qw (decode_jwt);
-use v5.10;
+use v5.16;
 
 
 my $http = HTTP::Tiny->new( verify_SSL => 1 );
