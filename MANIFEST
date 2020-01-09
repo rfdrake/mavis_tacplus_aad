@@ -10,4 +10,5 @@ bin/mavis_tacplus_aad.pl
 dist.ini
 t/Mavis.pm
 t/everything.t
+tac_plus.cfg.sample
 xt/author/pod-syntax.t

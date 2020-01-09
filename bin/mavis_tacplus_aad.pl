@@ -65,10 +65,27 @@ FLAG_USE_MEMBEROF
         Default: unset
 
 OAUTH_OPENID_CONFIG_URL
-OAUTH_KEYSERVER
-OAUTH_KEY
-OAUTH_GROUP_ID
+        This is the openid configuration URI which gives you information about the OAuth/openID provider.  This is one of the ways we can fetch the JWT signing key for verification.
+        Example: https://login.microsoftonline.com/common/.well-known/openid-configuration
+        Default: unset
 
+OAUTH_KEYSERVER
+        This is the server that provides keys for JWT signature verification.  It can be read from the OPENID_CONFIG_URL if one is provided.  You can choose between providing an OPENID_CONFIG_URL or a KEYSERVER URL, or specify the key.
+        Example: https://login.windows.net/common/discovery/keys
+        Default: unset
+
+OAUTH_KEY
+        If you have the exact key used to encode the JWT token, you can specify it here for verification.  I do not recommend this option unless you know what you're doing because of the possibility of the key changing later.
+        Default: unset
+
+OAUTH_JWT_INSECURE
+        This flag allows you to bypass the 3 configuration variables above and specify no signature verification for JWT.  This might be safe for some people since the transport is usually HTTPS.  This is to be considered a last resort if you can't get the other methods working.
+        Default: unset
+
+OAUTH_GROUP_ID
+        If you elect to not use the extended API permissions to load group names, you can hard code a group ID.  If the ID specified here matches one of the groups in the token from the OAuth server then the user is allowed to connect.
+        Example: a2810867-f89c-4fcc-b20d-eb3f3f22c651
+        Default: unset
 
 ########
 
@@ -168,6 +185,7 @@ sub setup_env {
                 'OAUTH_CLIENT_ID'             => $env->{'OAUTH_CLIENT_ID'},
                 'OAUTH_SECRET'                => $env->{'OAUTH_SECRET'},
                 'OAUTH_DOMAIN'                => $env->{'OAUTH_DOMAIN'},
+                'OAUTH_JWT_INSECURE'          => $env->{'OAUTH_JWT_INSECURE'},
                 'OAUTH_OPENID_CONFIG_URL'     => $env->{'OAUTH_OPENID_CONFIG_URL'},
                 'OAUTH_KEYSERVER'             => $env->{'OAUTH_KEYSERVER'},
                 'OAUTH_KEY'                   => $env->{'OAUTH_KEY'},
@@ -225,6 +243,10 @@ sub parse_jwt {
                     return decode_jwt(token => $token, kid_keys => $keys);
             }
 
+            if ( $opts->{OAUTH_JWT_INSECURE} ) {
+                return decode_jwt(token => $token, ignore_signature => 1);
+            }
+
             # if OAUTH_KEYSERVER or OAUTH_OPENID_CONFIG_URL or OAUTH_KEY is defined then perform a lookup of these values, then cache them?
             # if none of these are defined then we will set ignore_signature and read the JWT response without validating it.  This may be enough for some people since the session is validated over HTTPS
             if ($opts->{OAUTH_KEY}) {
@@ -242,8 +264,7 @@ sub parse_jwt {
                     return decode_jwt(token => $token, kid_keys => $keys);
             }
 
-            # if we get here then decode_jwt with no validation
-            return decode_jwt(token => $token, ignore_signature => 1);
+            die "No JWT signature verification method defined.";
         } catch {
             $keys = undef;
             return { exception_error => $@ };

@@ -1,0 +1,70 @@
+id = spawnd {
+        listen = {
+                port = 49
+        }
+        spawn = {
+                instances min = 1
+                instances max = 10
+        }
+        background = no
+}
+
+id = tac_plus {
+        access log = /var/log/tacacs/%Y/%m/%d/access.log
+        accounting log = /var/log/tacacs/%Y/%m/%d/acct.log
+
+        mavis module = external {
+                setenv OAUTH_ENDPOINT = "https://login.microsoftonline.com/06ab1719-d1f8-4cae-87fa-824768230090/oauth2/v2.0/token"
+                setenv OAUTH_CLIENT_ID = "c45aecee-71fa-4c6e-96c5-7397df677112"
+                setenv OAUTH_CLIENT_SECRET = "secretkey"
+                setenv OAUTH_DOMAIN = "example.com"
+                setenv FLAG_USE_MEMBEROF = 1
+                setenv REQUIRE_TACACS_GROUP_PREFIX = 1
+                setenv AD_GROUP_PREFIX = "tacacs"
+                setenv OAUTH_OPENID_CONFIG_URL = https://login.microsoftonline.com/common/.well-known/openid-configuration
+                exec = /usr/local/lib/mavis/mavis_tacplus_aad.pl
+        }
+
+        user backend = mavis    # query backend for users
+        login backend = mavis   # authenticate login via backend
+        pap backend = mavis             # authenticate PAP via backend
+
+        host = world {
+                address = ::/0
+                prompt = "Welcome\n"
+                key = cisco
+        }
+
+        host = helpdesklab {
+                        address = 192.168.34.16/28
+        }
+
+# A user will be in the "admin" group if he's member of the
+# corresponding "tacacsadmin" AD group. See $tacacsGroupPrefix
+# and $require_tacacsGroupPrefix in the code.
+
+        group = admin {
+                default service = permit
+                service = shell {
+                        default command = permit
+                        default attribute = permit
+                        set priv-lvl = 15
+                }
+        }
+
+# A user will be in the "helpdesk" group if he's member of the
+# corresponding "tacacshelpdesk" AD group:
+
+        group = helpdesk {
+                default service = permit
+                service = shell {
+                        default command = permit
+                        default attribute = permit
+                        set priv-lvl = 1
+                }
+                enable = deny
+                member = admin@helpdesklab
+        }
+}
+
+

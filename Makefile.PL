@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use 5.010000;
+use 5.016000;
 
 use ExtUtils::MakeMaker;
 
@@ -17,7 +17,7 @@ my %WriteMakefileArgs = (
     "bin/mavis_tacplus_aad.pl"
   ],
   "LICENSE" => "perl",
-  "MIN_PERL_VERSION" => "5.010000",
+  "MIN_PERL_VERSION" => "5.016000",
   "NAME" => "App::mavis::tacplus::aad",
   "PREREQ_PM" => {
     "Crypt::JWT" => 0,
