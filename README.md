@@ -3,6 +3,22 @@
 [![Build Status](https://travis-ci.org/rfdrake/mavis_tacplus_aad.svg?branch=master)](https://travis-ci.org/rfdrake/mavis_tacplus_aad)
 [![Coverage Status](https://coveralls.io/repos/github/rfdrake/mavis_tacplus_aad/badge.svg?branch=master)](https://coveralls.io/github/rfdrake/mavis_tacplus_aad?branch=master)
 
+
+# THIS IS OLD AND THE AZURE INSTRUCTIONS ARE PROBABLY OUTDATED.
+
+I've gone through azure a few times since making this and I think all of these
+options have been moved.  I'm sure this plugin would still work, but I don't
+know the exact process for setting it up.
+
+I urge you to try this instead:
+
+https://github.com/alan-turing-institute/pam-aad-oidc
+
+Then use the pammavis backend to connect tac_plus to PAM.
+
+
+
+
 # what this does
 
 This provides an Azure AD oauth backend for the MAVIS tacacs+ daemon.  You might be familiar with traditional active directory, and the way you connect with it for remote authentication.  Most people either use RADIUS or LDAP to talk to backend AD servers.  The cloud "Azure" product is different.  Even though it is a directory and it's referred to as "Active Directory", it doesn't have an LDAP interface.  The only way to talk with it is to use [OAUTH].
